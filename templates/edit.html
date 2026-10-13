@@ -1,0 +1,59 @@
+
+{% extends "base.html" %}
+
+{% block title %}Edit Task | TaskFlow{% endblock %}
+
+{% block content %}
+<section class="panel edit-panel">
+    <a class="back-link" href="{{ url_for('index') }}">← Back to tasks</a>
+
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">TASK MANAGEMENT</p>
+            <h1>Edit task<span class="heading-dot">.</span></h1>
+            <p class="muted">Update your task details below.</p>
+        </div>
+    </div>
+
+    <form action="{{ url_for('edit_task', task_id=task.id) }}"
+          method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <label for="title">Task title *</label>
+        <input id="title" name="title" type="text" maxlength="120"
+               value="{{ task.title }}" required>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="5"
+                  maxlength="2000">{{ task.description }}</textarea>
+
+        <div class="form-row">
+            <div>
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority">
+                    {% for p in ['Low', 'Medium', 'High'] %}
+                    <option value="{{ p }}"
+                        {% if task.priority == p %}selected{% endif %}>
+                        {{ p }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="due_date">Due date</label>
+                <input id="due_date" name="due_date" type="date"
+                       value="{{ task.due_date or '' }}">
+            </div>
+        </div>
+
+        <div class="edit-actions">
+            <button class="btn btn-primary" type="submit">
+                Save changes
+            </button>
+            <a class="btn btn-light" href="{{ url_for('index') }}">
+                Cancel
+            </a>
+        </div>
+    </form>
+</section>
+{% endblock %}
